@@ -1,0 +1,17 @@
+# {{ ansible_managed }}
+
+{% if hashi_vault_telemetry_enabled %}
+telemetry {
+  usage_gauge_period = "{{ hashi_vault_telemetry['usage_gauge_period'] }}"
+  maximum_gauge_cardinality = {{ hashi_vault_telemetry['maximum_gauge_cardinality'] }}
+  disable_hostname = {{ hashi_vault_telemetry['disable_hostname']|lower }}
+  enable_hostname_label = {{ hashi_vault_telemetry['enable_hostname_label']|lower }}
+  lease_metrics_epsilon = "{{ hashi_vault_telemetry['lease_metrics_epsilon'] }}"
+  num_lease_metrics_buckets = {{ hashi_vault_telemetry['num_lease_metrics_buckets'] }}
+  add_lease_metrics_namespace_labels = {{ hashi_vault_telemetry['add_lease_metrics_namespace_labels']|lower }}
+  filter_default = {{ hashi_vault_telemetry['filter_default']|lower }}
+  prefix_filter = [{% for item in hashi_vault_telemetry['prefix_filter'] %}"{{ item }}"{% if not loop.last %},{% endif %}{% endfor %}]
+  prometheus_retention_time = "{{ hashi_vault_telemetry['prometheus_retention_time'] }}"
+}
+
+{% endif %}
