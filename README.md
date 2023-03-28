@@ -1,8 +1,8 @@
-Hashicorp Nomad
+Hashicorp Vault
 =========
 > This repository is only a mirror. Development and testing is done on a private gitlab server.
 
-This role install and configure nomad on **debian-based** distributions.
+This role install and configure vault on **debian-based** distributions.
 
 Requirements
 ------------
@@ -11,7 +11,7 @@ None.
 
 Role Variables
 --------------
-Available variables are listed below, along with default values. A sample file for the default values is available in `default/hashicorp_nomad.yml.sample` in case you need it for any `group_vars` or `host_vars` configuration.
+Available variables are listed below, along with default values. A sample file for the default values is available in `default/hashicorp_vault.yml.sample` in case you need it for any `group_vars` or `host_vars` configuration.
 
 ```yaml
 hashi_nomad_install: true # by default, set to true
@@ -77,7 +77,7 @@ Including an example of how to use your role (for instance, with variables passe
 # calling the role inside a playbook with either the default or group_vars/host_vars
 - hosts: servers
   roles:
-    - ednxzu.hashicorp_nomad
+    - ednxzu.hashicorp_vault
 ```
 
 License
