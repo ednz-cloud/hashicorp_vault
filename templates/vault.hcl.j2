@@ -1,5 +1,8 @@
 # {{ ansible_managed }}
-
+cluster_name = "{{ hashi_vault_cluster_name }}"
+ui = {{ hashi_vault_ui_enabled|lower }}
+disable_mlock = {{ hashi_vault_disable_mlock|lower }}
+disable_cache = {{ hashi_vault_disable_cache|lower }}
 {% if hashi_vault_telemetry_enabled %}
 telemetry {
   usage_gauge_period = "{{ hashi_vault_telemetry['usage_gauge_period'] }}"

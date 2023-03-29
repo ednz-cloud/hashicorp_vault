@@ -26,7 +26,7 @@
 
 - name: "Copy systemd service file for vault"
   ansible.builtin.template:
-    src: "nomad.service.j2"
+    src: "vault.service.j2"
     dest: "/lib/systemd/system/vault.service"
     owner: root
     group: root

@@ -5,6 +5,9 @@ hashi_vault_start_service: true
 hashi_vault_version: latest
 hashi_vault_deploy_method: host  # deployment method, either host or docker
 hashi_vault_cluster_name: vault
+hashi_vault_ui_enabled: true
+hashi_vault_disable_mlock: false
+hashi_vault_disable_cache: false
 hashi_vault_storage_backend_type: raft # supports raft, file, consul, but all the storage backends should work, though they are not tested
 hashi_vault_storage_backend:
 hashi_vault_telemetry_enabled: false
