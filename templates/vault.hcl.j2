@@ -3,6 +3,26 @@ cluster_name = "{{ hashi_vault_cluster_name }}"
 ui = {{ hashi_vault_ui_enabled|lower }}
 disable_mlock = {{ hashi_vault_disable_mlock|lower }}
 disable_cache = {{ hashi_vault_disable_cache|lower }}
+
+listener "tcp" {
+  address = "{{ hashi_vault_tcp_listener['address'] }}"
+  cluster_address = "{{ hashi_vault_tcp_listener['cluster_address'] }}"
+  tls_disable = {{ hashi_vault_tcp_listener['tls_disable'] }}
+  tls_cert_file = {{ hashi_vault_tcp_listener['tls_cert_file'] }}
+  tls_key_file = {{ hashi_vault_tcp_listener['tls_key_file'] }}
+}
+
+storage "{{ hashi_vault_storage_backend_type }}" {
+{% if hashi_vault_storage_backend_type == "raft" %}
+  path = "{{ hashi_vault_storage_backend['path'] }}"
+  node_id = "{{ hashi_vault_storage_backend['node_id'] }}"
+{% elif hashi_vault_storage_backend_type == "consul" %}
+  address = "{{ hashi_vault_storage_backend['address'] }}"
+  path = "{{ hashi_vault_storage_backend['path'] }}"
+  token = "{{ hashi_vault_storage_backend['token'] }}"
+{% endif %}
+}
+
 {% if hashi_vault_telemetry_enabled %}
 telemetry {
   usage_gauge_period = "{{ hashi_vault_telemetry['usage_gauge_period'] }}"

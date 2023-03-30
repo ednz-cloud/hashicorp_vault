@@ -8,8 +8,19 @@ hashi_vault_cluster_name: vault
 hashi_vault_ui_enabled: true
 hashi_vault_disable_mlock: false
 hashi_vault_disable_cache: false
-hashi_vault_storage_backend_type: raft # supports raft, file, consul, but all the storage backends should work, though they are not tested
+# vault tcp listener
+hashi_vault_tcp_listener:
+  address: "127.0.0.1:8200"
+  cluster_address: "127.0.0.1:8201"
+  tls_disable: 0
+  tls_cert_file: /opt/vault/tls/tls.crt
+  tls_key_file: /opt/vault/tls/tls.key
+# vault storage backend
+hashi_vault_storage_backend_type: raft # supports raft or consul for now.
 hashi_vault_storage_backend:
+  path: /opt/vault/data
+  node_id: "{{ ansible_hostname }}"
+# vault telemetry
 hashi_vault_telemetry_enabled: false
 hashi_vault_telemetry:
   usage_gauge_period: 10m
