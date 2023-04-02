@@ -8,6 +8,7 @@ listener "tcp" {
   address = "{{ hashi_vault_tcp_listener['address'] }}"
   cluster_address = "{{ hashi_vault_tcp_listener['cluster_address'] }}"
   tls_disable = {{ hashi_vault_tcp_listener['tls_disable'] }}
+  tls_disable_client_certs = {{ hashi_vault_tcp_listener['tls_disable_client_certs']|lower }}
   tls_cert_file = "{{ hashi_vault_tcp_listener['tls_cert_file'] }}"
   tls_key_file = "{{ hashi_vault_tcp_listener['tls_key_file'] }}"
 }
