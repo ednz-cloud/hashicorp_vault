@@ -1,0 +1,20 @@
+---
+# task/configure file for hashicorp_vault
+- name: "Copy vault.hcl template"
+  ansible.builtin.template:
+    src: vault.hcl.j2
+    dest: "{{ hashi_vault_config_dir }}/vault.hcl"
+    owner: "{{ hashi_vault_user }}"
+    group: "{{ hashi_vault_group }}"
+    mode: '0600'
+  notify:
+    - "systemctl-enable-vault"
+    - "systemctl-restart-vault"
+
+- name: "Create empty vault.env"
+  ansible.builtin.file:
+    path: "{{ hashi_vault_config_dir }}/vault.env"
+    owner: "{{ hashi_vault_user }}"
+    group: "{{ hashi_vault_group }}"
+    mode: '0600'
+    state: file

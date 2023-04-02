@@ -8,12 +8,14 @@ listener "tcp" {
   address = "{{ hashi_vault_tcp_listener['address'] }}"
   cluster_address = "{{ hashi_vault_tcp_listener['cluster_address'] }}"
   tls_disable = {{ hashi_vault_tcp_listener['tls_disable'] }}
-  tls_cert_file = {{ hashi_vault_tcp_listener['tls_cert_file'] }}
-  tls_key_file = {{ hashi_vault_tcp_listener['tls_key_file'] }}
+  tls_cert_file = "{{ hashi_vault_tcp_listener['tls_cert_file'] }}"
+  tls_key_file = "{{ hashi_vault_tcp_listener['tls_key_file'] }}"
 }
 
 storage "{{ hashi_vault_storage_backend_type }}" {
-{% if hashi_vault_storage_backend_type == "raft" %}
+{% if hashi_vault_storage_backend_type == "file" %}
+  path = "{{ hashi_vault_storage_backend['path'] }}"
+{% elif hashi_vault_storage_backend_type == "raft" %}
   path = "{{ hashi_vault_storage_backend['path'] }}"
   node_id = "{{ hashi_vault_storage_backend['node_id'] }}"
 {% elif hashi_vault_storage_backend_type == "consul" %}
