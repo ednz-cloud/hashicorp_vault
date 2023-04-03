@@ -3,15 +3,19 @@ Description="HashiCorp Vault - A tool for managing secrets"
 Documentation=https://www.vaultproject.io/docs/
 Requires=network-online.target
 After=network-online.target
-ConditionFileNotEmpty=/etc/vault.d/vault.hcl
+ConditionFileNotEmpty={{ hashi_vault_config_dir }}/vault.hcl
 StartLimitIntervalSec=60
 StartLimitBurst=3
+{% if hashi_vault_storage_backend_type == "consul" %}
+Wants=consul.service
+After=consul.service
+{% endif %}
 
 [Service]
 Type=notify
-EnvironmentFile=/etc/vault.d/vault.env
-User=vault
-Group=vault
+EnvironmentFile={{ hashi_vault_config_dir }}/vault.env
+User={{ hashi_vault_user }}
+Group={{ hashi_vault_group }}
 ProtectSystem=full
 ProtectHome=read-only
 PrivateTmp=yes
@@ -20,7 +24,7 @@ SecureBits=keep-caps
 AmbientCapabilities=CAP_IPC_LOCK
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 NoNewPrivileges=yes
-ExecStart=/usr/bin/vault server -config=/etc/vault.d/vault.hcl
+ExecStart=/usr/bin/vault server -config={{ hashi_nomad_config_dir }}/vault.hcl
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT
