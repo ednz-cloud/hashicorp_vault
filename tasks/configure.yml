@@ -11,10 +11,10 @@
     - "systemctl-enable-vault"
     - "systemctl-restart-vault"
 
-- name: "Create empty vault.env"
-  ansible.builtin.file:
-    path: "{{ hashi_vault_config_dir }}/vault.env"
+- name: "Create vault.env"
+  ansible.builtin.template:
+    src: vault.env.j2
+    dest: "{{ hashi_vault_config_dir }}/vault.env"
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0600'
-    state: file
