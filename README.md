@@ -21,7 +21,7 @@ This variable defines if the vault package is to be installed or not before conf
 Dependencies
 ------------
 
-This role requires both `ednxzu.manage_repositories` and `ednxzu.manage_apt_packages` to install vault. If you already installed vault, you can set `hashi_vault_install` to `false`, and that'll remove the dependencies.
+This role has a task that installs its own dependencies located in `task/prerequisites.yml`, so that you don't need to manage them. This role requires both `ednxzu.manage_repositories` and `ednxzu.manage_apt_packages` to install vault.
 
 Example Playbook
 ----------------
