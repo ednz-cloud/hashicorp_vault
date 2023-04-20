@@ -1,5 +1,9 @@
 ---
 # task/main file for hashicorp_vault
+- name: "Debug"
+  ansible.builtin.debug:
+    msg: "{{ ansible_host }}"
+
 - name: "Import prerequisites.yml"
   ansible.builtin.include_tasks: prerequisites.yml
 

@@ -13,7 +13,7 @@ After=consul.service
 
 [Service]
 Type=notify
-EnvironmentFile={{ hashi_vault_config_dir }}/vault.env
+EnvironmentFile=-{{ hashi_vault_config_dir }}/vault.env
 User={{ hashi_vault_user }}
 Group={{ hashi_vault_group }}
 ProtectSystem=full
