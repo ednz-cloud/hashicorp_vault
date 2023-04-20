@@ -1,5 +1,7 @@
 # {{ ansible_managed }}
 cluster_name = "{{ hashi_vault_cluster_name }}"
+api_addr = "{{ hashi_vault_api_addr }}"
+cluster_addr = "{{ hashi_vault_cluster_addr }}"
 ui = {{ hashi_vault_ui_enabled|lower }}
 disable_mlock = {{ hashi_vault_disable_mlock|lower }}
 disable_cache = {{ hashi_vault_disable_cache|lower }}
@@ -17,6 +19,11 @@ storage "{{ hashi_vault_storage_backend_type }}" {
   path = "{{ hashi_vault_storage_backend['path'] }}"
 {% if hashi_vault_storage_backend_type == "raft" %}
   node_id = "{{ hashi_vault_storage_backend['node_id'] }}"
+{% for item in hashi_vault_storage_backend['retry_join']['nodes'] %}
+  retry_join {
+    leader_api_addr = "{{ item }}"
+  }
+{% endfor %}
 {% elif hashi_vault_storage_backend_type == "consul" %}
   address = "{{ hashi_vault_storage_backend['address'] }}"
   token = "{{ hashi_vault_storage_backend['token'] }}"
