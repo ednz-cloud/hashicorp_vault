@@ -29,7 +29,14 @@ hashi_vault_storage_backend:
       - https://127.0.0.1:8200
   # node_id: "{{ ansible_hostname }}"
   # address: 127.0.0.1:8500
+  # scheme: http
   # token: someUUIDforconsul
+# vault consul registration
+hashi_vault_consul_registration_enable: false
+hashi_vault_consul_registration:
+  address: 127.0.0.1:8500
+  scheme: https
+  token: someUUIDforconsul
 # vault telemetry
 hashi_vault_telemetry_enabled: false
 hashi_vault_telemetry:
