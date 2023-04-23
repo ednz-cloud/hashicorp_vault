@@ -1,9 +1,14 @@
 ---
 # task/configure file for hashicorp_vault
-- name: "Copy vault.hcl template"
+- name: "Ensure default vault.hcl is removed"
+  ansible.builtin.file:
+    path: /etc/vault.d/vault.hcl
+    state: absent
+
+- name: "Copy vault.json template"
   ansible.builtin.template:
-    src: vault.hcl.j2
-    dest: "{{ hashi_vault_config_dir }}/vault.hcl"
+    src: vault.json.j2
+    dest: "{{ hashi_vault_config_dir }}/vault.json"
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0600'

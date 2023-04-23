@@ -21,13 +21,13 @@ def test_vault_user_group(host):
 def test_vault_config(host):
     """Validate /etc/vault.d/ files."""
     etc_vault_d_vault_env = host.file("/etc/vault.d/vault.env")
-    etc_vault_d_vault_hcl = host.file("/etc/vault.d/vault.hcl")
-    for file in etc_vault_d_vault_env, etc_vault_d_vault_hcl:
+    etc_vault_d_vault_json = host.file("/etc/vault.d/vault.json")
+    for file in etc_vault_d_vault_env, etc_vault_d_vault_json:
         assert file.exists
         assert file.user == "vault"
         assert file.group == "vault"
         assert file.mode == 0o600
-        if file == etc_vault_d_vault_hcl:
+        if file == etc_vault_d_vault_json:
             assert file.content_string != ""
 
 def test_vault_storage(host):
@@ -41,7 +41,7 @@ def test_vault_storage(host):
 
 def test_vault_service_file(host):
     """Validate vault service file."""
-    lib_systemd_system_vault_service = host.file("/lib/systemd/system/vault.service")
+    lib_systemd_system_vault_service = host.file("/etc/systemd/system/vault.service")
     assert lib_systemd_system_vault_service.exists
     assert lib_systemd_system_vault_service.user == "root"
     assert lib_systemd_system_vault_service.group == "root"
@@ -57,7 +57,7 @@ def test_vault_service(host):
     assert vault_service.systemd_properties["User"] == "vault"
     assert vault_service.systemd_properties["Group"] == "vault"
     assert vault_service.systemd_properties["EnvironmentFiles"] == "/etc/vault.d/vault.env (ignore_errors=yes)"
-    assert vault_service.systemd_properties["FragmentPath"] == "/lib/systemd/system/vault.service"
+    assert vault_service.systemd_properties["FragmentPath"] == "/etc/systemd/system/vault.service"
 
 def test_vault_interaction(host):
     """Validate interaction with vault."""

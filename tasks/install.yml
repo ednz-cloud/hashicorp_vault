@@ -17,7 +17,7 @@
 - name: "Copy systemd service file for vault"
   ansible.builtin.template:
     src: "vault.service.j2"
-    dest: "/lib/systemd/system/vault.service"
+    dest: "/etc/systemd/system/vault.service"
     owner: root
     group: root
     mode: '0644'

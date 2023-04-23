@@ -15,7 +15,9 @@ def to_hcl(value, indent_level=0):
             items = ",\n".join([f"{indent}  {to_hcl(item, indent_level+1)}" for item in value])
             return f"[\n{items}\n{indent}]"
     elif isinstance(value, dict):
-        if all(key.startswith("_") for key in value.keys()):
+        if not value:
+            return "{}"
+        elif all(key.startswith("_") for key in value.keys()):
             items = "\n".join([f"{indent}{to_hcl(val, indent_level)}" for val in value.values()])
             return f"{items}"
         else:
