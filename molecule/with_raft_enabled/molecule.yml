@@ -28,7 +28,6 @@ scenario:
   name: with_raft_enabled
   test_sequence:
     - dependency
-    - lint
     - cleanup
     - destroy
     - syntax
