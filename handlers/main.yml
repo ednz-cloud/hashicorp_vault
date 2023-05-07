@@ -16,4 +16,5 @@
     name: vault
     state: restarted
   listen: "systemctl-restart-vault"
+  throttle: 1
   when: hashi_vault_start_service
