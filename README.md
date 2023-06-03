@@ -19,6 +19,11 @@ hashi_vault_install: true # by default, set to true
 This variable defines if the vault package is to be installed or not before configuring. If you install vault using another task, you can set this to `false`.
 
 ```yaml
+hashi_vault_auto_update: false # by default, set to false
+```
+This variable allows you to choose to automatically update vault if a newer version is available. Updating vault is usually pretty safe if done on a regular basis, but for better control over the upgrade process, see `hashi_vault_version`.
+
+```yaml
 hashi_vault_start_service: true
 ```
 This variable defines if the vault service should be started once it has been configured. This is usefull in case you're using this role to build golden images, in which case you might want to only enable the service, to have it start on the next boot (when the image is launched)
