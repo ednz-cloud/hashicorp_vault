@@ -1,6 +1,6 @@
-Hashicorp Vault
+hashicorp_vault
 =========
-> This repository is only a mirror. Development and testing is done on a private gitlab server.
+> This repository is only a mirror. Development and testing is done on a private gitea server.
 
 This role install and configure vault on **debian-based** distributions.
 
