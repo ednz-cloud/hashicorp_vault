@@ -73,7 +73,8 @@ This variable sets all of the configuration parameters for vault. For more infor
 Dependencies
 ------------
 
-This role has a task that installs its own dependencies located in `task/prerequisites.yml`, so that you don't need to manage them. This role requires both `ednxzu.manage_repositories` and `ednxzu.manage_apt_packages` to install vault.
+`ednxzu.manage_repositories` to configure the hashicorp apt repository.
+`ednxzu.manage_apt_packages` to install vault.
 
 Example Playbook
 ----------------

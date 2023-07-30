@@ -1,14 +1,5 @@
 ---
 # task/prerequisites file for hashicorp_vault
-- name: "Install required roles"
-  ansible.builtin.command:
-    cmd: "ansible-galaxy install {{ item }}"
-  loop: "{{ hashi_vault_prerequisites_roles }}"
-  changed_when: false
-  become: false
-  delegate_to: localhost
-  run_once: true
-
 - name: "Create group {{ hashi_vault_group }}"
   ansible.builtin.group:
     name: "{{ hashi_vault_user }}"
