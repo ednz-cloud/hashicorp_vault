@@ -4,13 +4,17 @@ hashi_vault_user: vault
 hashi_vault_group: vault
 hashi_vault_config_dir: "/etc/vault.d"
 hashi_vault_repository:
-  - uri: "https://apt.releases.hashicorp.com"
-    gpg_key: "https://apt.releases.hashicorp.com/gpg"
+  - name: hashicorp
+    uri: "https://apt.releases.hashicorp.com"
     comments: "hashicorp repository"
-    type: "deb"
-    suites: "{{ ansible_distribution_release }}"
-    components: "main"
-    filename: "hashicorp"
+    types:
+      - deb
+    suites:
+      - "{{ ansible_distribution_release }}"
+    components:
+      - main
+    options:
+      Signed-By: "https://apt.releases.hashicorp.com/gpg"
 hashi_vault_packages:
   - name: vault
     version: "{{ hashi_vault_version }}"
