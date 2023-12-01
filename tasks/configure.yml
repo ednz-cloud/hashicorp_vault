@@ -4,6 +4,7 @@
   ansible.builtin.file:
     path: /etc/vault.d/vault.hcl
     state: absent
+  become: true
 
 - name: "Copy vault.json template"
   ansible.builtin.template:
@@ -12,6 +13,7 @@
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0600'
+  become: true
   notify:
     - "systemctl-enable-vault"
     - "systemctl-restart-vault"
@@ -23,8 +25,10 @@
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0600'
+  become: true
 
 - name: "Copy extra configuration files"
+  become: true
   when: hashi_vault_extra_files
   block:
     - name: "Create directory {{ hashi_vault_extra_files_dst }}"
