@@ -4,7 +4,6 @@
   ansible.builtin.group:
     name: "{{ hashi_vault_user }}"
     state: present
-  become: true
 
 - name: "Create user {{ hashi_vault_user }}"
   ansible.builtin.user:
@@ -12,7 +11,6 @@
     group: "{{ hashi_vault_group }}"
     shell: /bin/false
     state: present
-  become: true
 
 - name: "Create directory {{ hashi_vault_config_dir }}"
   ansible.builtin.file:
@@ -21,7 +19,6 @@
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0755'
-  become: true
 
 - name: "Create directory {{ hashi_vault_data_dir }}"
   ansible.builtin.file:
@@ -30,4 +27,3 @@
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: '0755'
-  become: true

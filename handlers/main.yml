@@ -3,14 +3,12 @@
 - name: "Reload systemd file"
   ansible.builtin.systemd:
     daemon_reload: true
-  become: true
   listen: "systemctl-daemon-reload"
 
 - name: "Enable vault service"
   ansible.builtin.service:
     name: vault
     enabled: true
-  become: true
   listen: "systemctl-enable-vault"
 
 - name: "Start vault service"
@@ -20,4 +18,3 @@
   listen: "systemctl-restart-vault"
   throttle: 1
   when: hashi_vault_start_service
-  become: true
