@@ -28,11 +28,6 @@
 #   storage:
 #     file:
 #       path: "{{ hashi_vault_data_dir }}/data"
-#   # service_registration:
-#   #   consul:
-#   #     address: 127.0.0.1:8500
-#   #     scheme: https
-#   #     token: someUUIDforconsul
 #   telemetry:
 #     usage_gauge_period: 10m
 #     maximum_gauge_cardinality: 500
