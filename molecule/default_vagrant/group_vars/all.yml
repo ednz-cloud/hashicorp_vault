@@ -12,15 +12,15 @@ hashi_vault_extra_files_dst: /etc/vault.d/extra_files
 #! vault configuration
 hashi_vault_configuration:
   cluster_name: vault
-  cluster_addr: "http://{{ ansible_default_ipv4.address }}:8201"
-  api_addr: "http://{{ ansible_default_ipv4.address }}:8200"
+  cluster_addr: "http://127.0.0.1:8201"
+  api_addr: "http://127.0.0.1:8200"
   ui: true
   disable_mlock: false
   disable_cache: false
   listener:
     tcp:
-      address: "{{ ansible_default_ipv4.address }}:8200"
-      cluster_address: "{{ ansible_default_ipv4.address }}:8201"
+      address: "127.0.0.1:8200"
+      cluster_address: "127.0.0.1:8201"
       tls_disable: 1
   storage:
     file:
