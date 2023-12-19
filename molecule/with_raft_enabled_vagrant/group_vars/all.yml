@@ -25,7 +25,7 @@ hashi_vault_configuration:
       tls_disable: true
   storage:
     raft:
-      path: "{{ hashi_vault_data_dir }}/data"
+      path: "/vault/data"
       node_id: "{{ ansible_hostname }}"
       retry_join:
         - leader_api_addr: "http://127.0.0.1:8200"
