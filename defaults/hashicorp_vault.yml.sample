@@ -9,6 +9,7 @@
 # hashi_vault_extra_files: false
 # hashi_vault_extra_files_src: /tmp/extra_files
 # hashi_vault_extra_files_dst: /etc/vault.d/extra_files
+# hashi_vault_extra_container_volumes: []
 # #! vault configuration
 # hashi_vault_configuration:
 #   cluster_name: vault

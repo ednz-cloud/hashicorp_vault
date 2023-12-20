@@ -7,7 +7,7 @@ hashi_vault_service_name: "vault{{ '_container' if hashi_vault_deploy_method == 
 hashi_vault_docker_image: hashicorp/vault
 hashi_vault_container_volume_map:
   - "{{ hashi_vault_config_dir }}:/vault/config"
-  - "{{ hashi_vault_data_dir }}:/vault/data"
+  - "{{ hashi_vault_data_dir }}:{{ hashi_vault_configuration.storage.file.path | default(hashi_vault_configuration.storage.raft.path | default('/vault/file')) }}"
 hashi_vault_repository:
   - name: hashicorp
     uri: "https://apt.releases.hashicorp.com"
