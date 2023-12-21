@@ -20,7 +20,3 @@ hashi_vault_repository:
       - main
     options:
       Signed-By: "https://apt.releases.hashicorp.com/gpg"
-hashi_vault_packages:
-  - name: vault
-    version: "{{ hashi_vault_version }}"
-    state: "{% if hashi_vault_auto_update %}latest{% else %}present{% endif %}"
