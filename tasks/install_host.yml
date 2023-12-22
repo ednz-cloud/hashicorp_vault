@@ -1,0 +1,44 @@
+---
+# task/install file for hashicorp_vault
+- name: "Configure hashicorp repository"
+  ansible.builtin.include_role:
+    name: ednxzu.manage_repositories
+  vars:
+    manage_repositories_enable_default_repo: false
+    manage_repositories_enable_custom_repo: true
+    manage_repositories_custom_repo: "{{ hashi_vault_repository }}"
+
+- name: "Get service vault"
+  ansible.builtin.service_facts:
+
+- name: "Install from repostories"
+  throttle: 1
+  block:
+    - name: "Install vault version: {{ hashi_vault_version }}"
+      ansible.builtin.apt:
+        update_cache: yes
+        name: "vault{{ '='~hashi_vault_version if hashi_vault_version != 'latest' }}"
+        state: "{{ 'present' if hashi_vault_version != 'latest' else hashi_vault_version}}"
+        allow_downgrade: true
+        cache_valid_time: 3600
+
+    - name: "Ensure vault is running"
+      ansible.builtin.service:
+        name: "{{ hashi_vault_service_name }}"
+        state: started
+      register: _vault_service_health
+      until: _vault_service_health.status.ActiveState == "active"
+      retries: 15
+      delay: 2
+      when: ansible_facts.services[hashi_vault_service_name~'.service'] is defined
+        and ansible_facts.services[hashi_vault_service_name~'.service']['state'] == 'running'
+
+- name: "Copy systemd service file for vault"
+  ansible.builtin.template:
+    src: "vault.service.j2"
+    dest: "/etc/systemd/system/vault.service"
+    owner: root
+    group: root
+    mode: '0644'
+  notify:
+    - "systemctl-daemon-reload"

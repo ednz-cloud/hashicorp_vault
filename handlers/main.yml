@@ -7,13 +7,13 @@
 
 - name: "Enable vault service"
   ansible.builtin.service:
-    name: vault
+    name: "{{ hashi_vault_service_name }}"
     enabled: true
   listen: "systemctl-enable-vault"
 
 - name: "Start vault service"
   ansible.builtin.service:
-    name: vault
+    name: "{{ hashi_vault_service_name }}"
     state: restarted
   listen: "systemctl-restart-vault"
   throttle: 1

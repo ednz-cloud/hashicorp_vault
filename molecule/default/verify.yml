@@ -126,12 +126,12 @@
       vars:
         vault_unseal_keys: "{{ vault_operator_init.stdout|from_json|json_query('unseal_keys_hex') }}"
       block:
-        - name: "Command vault operator init"
+        - name: "Command vault operator unseal"
           ansible.builtin.command: "vault operator unseal -format=json -tls-skip-verify {{ vault_unseal_keys[0] }}"
           changed_when: false
           register: vault_operator_unseal_0
 
-        - name: "Command vault operator init"
+        - name: "Command vault operator unseal"
           ansible.builtin.command: "vault operator unseal -format=json -tls-skip-verify {{ vault_unseal_keys[1] }}"
           changed_when: false
           register: vault_operator_unseal_1
