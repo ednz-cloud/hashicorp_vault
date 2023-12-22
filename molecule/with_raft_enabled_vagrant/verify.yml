@@ -94,7 +94,8 @@
               --env-file /etc/default/vault \
               --network "host" \
               --volume "/etc/vault.d:/vault/config" \
-              --volume "/opt/vault:/vault/data" \
+              --volume "/opt/vault/data:/opt/vault/data" \
+              --volume "/opt/vault/tls:/opt/vault/tls" \
               --cap-add "IPC_LOCK" \
               hashicorp/vault:latest server
               ExecStop=/usr/bin/docker stop vault

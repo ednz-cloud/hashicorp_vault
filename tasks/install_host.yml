@@ -8,12 +8,6 @@
     manage_repositories_enable_custom_repo: true
     manage_repositories_custom_repo: "{{ hashi_vault_repository }}"
 
-#- name: "Install vault:{{ hashi_vault_version }}"
-#  ansible.builtin.include_role:
-#    name: ednxzu.manage_apt_packages
-#  vars:
-#    manage_apt_packages_list: "{{ hashi_vault_packages }}"
-
 - name: "Get service vault"
   ansible.builtin.service_facts:
 
