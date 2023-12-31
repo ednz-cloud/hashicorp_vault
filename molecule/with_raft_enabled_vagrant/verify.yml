@@ -93,11 +93,11 @@
               --rm \
               --env-file /etc/default/vault \
               --network "host" \
-              --volume "/etc/vault.d:/vault/config" \
+              --volume "/etc/vault.d:/etc/vault.d" \
               --volume "/opt/vault/data:/opt/vault/data" \
               --volume "/opt/vault/tls:/opt/vault/tls" \
               --cap-add "IPC_LOCK" \
-              hashicorp/vault:latest server
+              hashicorp/vault:latest server -config=/etc/vault.d
               ExecStop=/usr/bin/docker stop vault
               SyslogIdentifier=vault
               Restart=always
