@@ -45,12 +45,12 @@ This value defines the path where vault data will be stored on the node. Default
 ```yaml
 hashi_vault_extra_files: false # by default, set to false
 ```
-This variable defines whether or not there is extra configuration files to copy to the target. If there are, these extra files are expected to be jinja2 templates located all in the same directory, and will be copied to the specified directory on the target machine.
+This variable defines whether or not there is extra configuration files to copy to the target. If true, these files can be anything static (no jinja2 templates).
 
 ```yaml
 hashi_vault_extra_files_src: /tmp/extra_files # by default, set to /tmp/extra_files
 ```
-This variable defines the source directory (without the trailing /) for the extra files to be copied in case there are some.
+This variable defines the source directory (without the trailing /) for the extra files to be copied in case there are some. The entire directory structure above the defined directory will be copied recursively to the target host.
 
 ```yaml
 hashi_vault_extra_files_dst: /etc/vault.d/extra_files # by default, set to /etc/vault.d/extra_files
