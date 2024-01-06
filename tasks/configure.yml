@@ -33,10 +33,9 @@
     - name: "Update container volume list"
       ansible.builtin.set_fact:
         hashi_vault_container_volume_map: "{{
-          hashi_vault_container_volume_map + [
+          (hashi_vault_container_volume_map + [
           hashi_vault_extra_files_dst + ':' + hashi_vault_extra_files_dst
-          ]
-          }}"
+          ]) | unique }}"
 
     - name: "Create directory {{ hashi_vault_extra_files_dst }}"
       ansible.builtin.file:
@@ -47,11 +46,23 @@
         mode: '0755'
 
     - name: "Copy extra configuration files"
-      ansible.builtin.template:
-        src: "{{ item }}"
-        dest: "{{ hashi_vault_extra_files_dst }}/{{ (item | basename).split('.')[:-1] | join('.')}}"
+      ansible.builtin.copy:
+        src: "{{ hashi_vault_extra_files_src }}/"
+        dest: "{{ hashi_vault_extra_files_dst }}/"
         owner: "{{ hashi_vault_user }}"
         group: "{{ hashi_vault_group }}"
         mode: '0600'
-      with_fileglob:
-        - "{{ hashi_vault_extra_files_src }}/*"
+
+    - name: "Set permissions for directories"
+      ansible.builtin.find:
+        paths: "{{ hashi_vault_extra_files_dst }}"
+        recurse: yes
+        file_type: directory
+      register: directories_to_set_permissions
+
+    - name: "Set permissions for directories"
+      ansible.builtin.file:
+        path: "{{ item.path }}"
+        mode: '0755'
+      with_items: "{{ directories_to_set_permissions.files }}"
+      when: directories_to_set_permissions.matched > 0
