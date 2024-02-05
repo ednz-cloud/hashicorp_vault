@@ -1,7 +1,7 @@
 ---
 # meta file for hashicorp_vault
 galaxy_info:
-  namespace: 'ednxzu'
+  namespace: 'ednz_cloud'
   role_name: 'hashicorp_vault'
   author: 'Bertrand Lanson'
   description: 'Install and configure hashicorp vault for debian-based distros.'

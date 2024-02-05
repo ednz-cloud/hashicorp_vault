@@ -70,8 +70,8 @@ This variable sets all of the configuration parameters for vault. For more infor
 Dependencies
 ------------
 
-`ednxzu.manage_repositories` to configure the hashicorp apt repository.
-`ednxzu.docker_systemd_service` if installing vault in a container.
+`ednz_cloud.manage_repositories` to configure the hashicorp apt repository.
+`ednz_cloud.docker_systemd_service` if installing vault in a container.
 
 Example Playbook
 ----------------
@@ -81,7 +81,7 @@ Including an example of how to use your role (for instance, with variables passe
 # calling the role inside a playbook with either the default or group_vars/host_vars
 - hosts: servers
   roles:
-    - ednxzu.hashicorp_vault
+    - ednz_cloud.hashicorp_vault
 ```
 
 License
