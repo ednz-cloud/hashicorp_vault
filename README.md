@@ -11,7 +11,7 @@ None.
 
 Role Variables
 --------------
-Available variables are listed below, along with default values. A sample file for the default values is available in `default/hashicorp_vault.yml.sample` in case you need it for any `group_vars` or `host_vars` configuration.
+Available variables are listed below, along with default values.
 
 ```yaml
 hashi_vault_start_service: true
@@ -48,14 +48,43 @@ hashi_vault_extra_files: false # by default, set to false
 This variable defines whether or not there is extra configuration files to copy to the target. If true, these files can be anything static (no jinja2 templates).
 
 ```yaml
-hashi_vault_extra_files_src: /tmp/extra_files # by default, set to /tmp/extra_files
+hashi_vault_extra_files_list: [] # by default, set to []
+  # - src: /tmp/directory
+  #   dest: /etc/vault.d/directory
+  # - src: /tmp/file.conf
+  #   dest: /etc/vault.d/file.conf
+  # - src: /etc/vault.d/file.j2
+  #   dest: /etc/vault.d/file
 ```
-This variable defines the source directory (without the trailing /) for the extra files to be copied in case there are some. The entire directory structure above the defined directory will be copied recursively to the target host.
+This variable lets you copy extra configuration files and directories over to the target host(s). It is a list of dicts. Each dict needs a `src` and a `dest` attribute. The source is expected to be located on the deployment machine. The source can be either a file or a directory. The destination must match the type of the source (file to file, dir to dir). If the source is a directory, every file inside of it will be recursively copied and templated over to the target directory.
+
+For example, if you have the following source files to copy:
+
+```bash
+├── directory
+│   ├── recursive
+│   │   ├── test4.j2
+│   │   └── test.j2024.conf
+│   └── test3
+├── file
+├── file2.j2
+```
+You can set:
 
 ```yaml
-hashi_vault_extra_files_dst: /etc/vault.d/extra_files # by default, set to /etc/vault.d/extra_files
+hashi_vault_extra_files_list: [] # by default, set to []
+  - src: /tmp/directory
+    dest: /etc/vault.d/directory
+  - src: /tmp/file
+    dest: /etc/vault.d/file.conf
+  - src: /etc/vault.d/file2.j2
+    dest: /etc/vault.d/file2.conf
 ```
-This variable defines the destination directory (without the trailing /) for the extra files to be copied.
+all the files shown above will be copied over, and the directory structure inside `directory` will be preserved.
+
+> **Note**
+> In case you're using the `docker` deployment method, every destination path will be added automatically to the `hashi_vault_extra_container_volumes` variable, so you don't need to set them manually.
+
 
 ```yaml
 hashi_vault_extra_container_volumes: [] # by default, set to []

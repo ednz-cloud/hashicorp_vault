@@ -14,7 +14,7 @@
         dest: "{{ hashi_vault_config_dir }}/vault.env"
         owner: "{{ hashi_vault_user }}"
         group: "{{ hashi_vault_group }}"
-        mode: '0600'
+        mode: "0600"
 
 - name: "Copy vault.json template"
   ansible.builtin.template:
@@ -22,7 +22,7 @@
     dest: "{{ hashi_vault_config_dir }}/vault.json"
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
-    mode: '0600'
+    mode: "0600"
   notify:
     - "systemctl-enable-vault"
     - "systemctl-restart-vault"
@@ -34,35 +34,53 @@
       ansible.builtin.set_fact:
         hashi_vault_container_volume_map: "{{
           (hashi_vault_container_volume_map + [
-          hashi_vault_extra_files_dst + ':' + hashi_vault_extra_files_dst
+          item.dest + ':' + item.dest
           ]) | unique }}"
+      loop: "{{ hashi_vault_extra_files_list }}"
+      loop_control:
+        loop_var: item
+      delegate_to: localhost
 
-    - name: "Create directory {{ hashi_vault_extra_files_dst }}"
-      ansible.builtin.file:
-        path: "{{ hashi_vault_extra_files_dst }}"
-        state: directory
+    - name: "Get extra file types"
+      ansible.builtin.stat:
+        path: "{{ item.src }}"
+      loop: "{{ hashi_vault_extra_files_list }}"
+      register: hashi_vault_extra_file_stat
+      delegate_to: localhost
+
+    - name: "Set list for file sources"
+      vars:
+        _hashi_vault_file_sources: []
+      ansible.builtin.set_fact:
+        _hashi_vault_file_sources: "{{ _hashi_vault_file_sources + [item.item] }}"
+      when: item.stat.isreg
+      loop: "{{ hashi_vault_extra_file_stat.results }}"
+      loop_control:
+        loop_var: item
+      delegate_to: localhost
+
+    - name: "Set list for directory sources"
+      vars:
+        _hashi_vault_dir_sources: []
+      ansible.builtin.set_fact:
+        _hashi_vault_dir_sources: "{{ _hashi_vault_dir_sources + [item.item] }}"
+      when: item.stat.isdir
+      loop: "{{ hashi_vault_extra_file_stat.results }}"
+      loop_control:
+        loop_var: item
+      delegate_to: localhost
+
+    - name: "Template extra file sources"
+      ansible.builtin.template:
+        src: "{{ item.src }}"
+        dest: "{{ item.dest | regex_replace('\\.j2$', '') }}"
         owner: "{{ hashi_vault_user }}"
         group: "{{ hashi_vault_group }}"
-        mode: '0755'
+        mode: "0700"
+      loop: "{{ _hashi_vault_file_sources }}"
 
-    - name: "Copy extra configuration files"
-      ansible.builtin.copy:
-        src: "{{ hashi_vault_extra_files_src }}/"
-        dest: "{{ hashi_vault_extra_files_dst }}/"
-        owner: "{{ hashi_vault_user }}"
-        group: "{{ hashi_vault_group }}"
-        mode: '0600'
-
-    - name: "Set permissions for directories"
-      ansible.builtin.find:
-        paths: "{{ hashi_vault_extra_files_dst }}"
-        recurse: yes
-        file_type: directory
-      register: directories_to_set_permissions
-
-    - name: "Set permissions for directories"
-      ansible.builtin.file:
-        path: "{{ item.path }}"
-        mode: '0755'
-      with_items: "{{ directories_to_set_permissions.files }}"
-      when: directories_to_set_permissions.matched > 0
+    - name: "Template extra directory sources"
+      ansible.builtin.include_tasks: recursive_copy_extra_dirs.yml
+      loop: "{{ _hashi_vault_dir_sources }}"
+      loop_control:
+        loop_var: dir_source_item

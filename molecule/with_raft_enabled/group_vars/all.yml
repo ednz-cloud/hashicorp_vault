@@ -4,12 +4,12 @@ hashi_vault_install: true
 hashi_vault_auto_update: true
 hashi_vault_start_service: true
 hashi_vault_version: latest
-hashi_vault_deploy_method: host  # deployment method, either host or docker
+hashi_vault_deploy_method: host # deployment method, either host or docker
 hashi_vault_env_variables: {}
 hashi_vault_data_dir: "/opt/vault"
 hashi_vault_extra_files: false
-hashi_vault_extra_files_src: /tmp/extra_files
-hashi_vault_extra_files_dst: /etc/vault.d/extra_files
+hashi_vault_extra_files_list: []
+hashi_vault_extra_container_volumes: []
 #! vault configuration
 hashi_vault_configuration:
   cluster_name: vault

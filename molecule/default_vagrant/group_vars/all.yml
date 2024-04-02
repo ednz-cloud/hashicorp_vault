@@ -1,6 +1,5 @@
 ---
-
-hashi_vault_deploy_method: docker  # deployment method, either host or docker
+hashi_vault_deploy_method: docker # deployment method, either host or docker
 hashi_vault_configuration:
   cluster_name: vault
   cluster_addr: "http://127.0.0.1:8201"
