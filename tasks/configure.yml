@@ -1,20 +1,13 @@
 ---
 # task/configure file for hashicorp_vault
-- name: "Configure for host installation"
-  when: hashi_vault_deploy_method == 'host'
-  block:
-    - name: "Ensure default vault.hcl is removed"
-      ansible.builtin.file:
-        path: /etc/vault.d/vault.hcl
-        state: absent
-
-    - name: "Create vault.env"
-      ansible.builtin.template:
-        src: vault.env.j2
-        dest: "{{ hashi_vault_config_dir }}/vault.env"
-        owner: "{{ hashi_vault_user }}"
-        group: "{{ hashi_vault_group }}"
-        mode: "0600"
+- name: "Create vault.env"
+  ansible.builtin.template:
+    src: vault.env.j2
+    dest: "{{ hashi_vault_config_dir }}/vault.env"
+    owner: "{{ hashi_vault_user }}"
+    group: "{{ hashi_vault_group }}"
+    mode: "0600"
+  register: _hashi_vault_env_file
 
 - name: "Copy vault.json template"
   ansible.builtin.template:
@@ -23,24 +16,17 @@
     owner: "{{ hashi_vault_user }}"
     group: "{{ hashi_vault_group }}"
     mode: "0600"
-  notify:
-    - "systemctl-enable-vault"
-    - "systemctl-restart-vault"
+  register: _hashi_vault_config_file
+
+- name: "Set restart-check variable"
+  ansible.builtin.set_fact:
+    _hashi_vault_service_need_restart: true
+  when: _hashi_vault_env_file.changed or
+    _hashi_vault_config_file.changed
 
 - name: "Copy extra configuration files"
   when: hashi_vault_extra_files
   block:
-    - name: "Update container volume list"
-      ansible.builtin.set_fact:
-        hashi_vault_container_volume_map: "{{
-          (hashi_vault_container_volume_map + [
-          item.dest + ':' + item.dest
-          ]) | unique }}"
-      loop: "{{ hashi_vault_extra_files_list }}"
-      loop_control:
-        loop_var: item
-      delegate_to: localhost
-
     - name: "Get extra file types"
       ansible.builtin.stat:
         path: "{{ item.src }}"

@@ -67,7 +67,7 @@ jobs:
     strategy:
       matrix:
         test_os: [debian11, debian12, ubuntu2004, ubuntu2204, ubuntu2404]
-        scenario: [default, with_acl_enabled]
+        scenario: [default, with_raft_enabled]
     env:
       ANSIBLE_HOST_KEY_CHECKING: "false"
       ANSIBLE_FORCE_COLOR: "true"

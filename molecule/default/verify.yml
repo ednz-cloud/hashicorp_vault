@@ -28,6 +28,22 @@
               - "'/bin/false' in vault_user.ansible_facts.getent_passwd['vault']"
               - "'vault' in vault_group.ansible_facts.getent_group.keys()"
 
+    - name: "Test: binary /usr/local/bin/vault"
+      block:
+        - name: "Stat binary /usr/local/bin/vault"
+          ansible.builtin.stat:
+            path: "/usr/local/bin/vault"
+          register: stat_usr_local_bin_vault
+
+        - name: "Verify binary /usr/local/bin/vault"
+          ansible.builtin.assert:
+            that:
+              - stat_usr_local_bin_vault.stat.exists
+              - stat_usr_local_bin_vault.stat.isreg
+              - stat_usr_local_bin_vault.stat.pw_name == 'root'
+              - stat_usr_local_bin_vault.stat.gr_name == 'root'
+              - stat_usr_local_bin_vault.stat.mode == '0755'
+
     - name: "Test: directory /etc/vault.d"
       block:
         - name: "Stat directory /etc/vault.d"
@@ -118,7 +134,9 @@
     - name: "Test: bootstrap vault cluster"
       block:
         - name: "Command vault operator init"
-          ansible.builtin.command: "vault operator init -non-interactive -key-shares=3 -key-threshold=2 -tls-skip-verify -format=json"
+          ansible.builtin.command: "vault operator init -non-interactive -key-shares=3 -key-threshold=2 -format=json"
+          environment:
+            VAULT_ADDR: http://localhost:8200
           changed_when: false
           register: vault_operator_init
 
@@ -127,12 +145,16 @@
         vault_unseal_keys: "{{ vault_operator_init.stdout|from_json|json_query('unseal_keys_hex') }}"
       block:
         - name: "Command vault operator unseal"
-          ansible.builtin.command: "vault operator unseal -format=json -tls-skip-verify {{ vault_unseal_keys[0] }}"
+          ansible.builtin.command: "vault operator unseal -format=json {{ vault_unseal_keys[0] }}"
+          environment:
+            VAULT_ADDR: http://localhost:8200
           changed_when: false
           register: vault_operator_unseal_0
 
         - name: "Command vault operator unseal"
-          ansible.builtin.command: "vault operator unseal -format=json -tls-skip-verify {{ vault_unseal_keys[1] }}"
+          ansible.builtin.command: "vault operator unseal -format=json {{ vault_unseal_keys[1] }}"
+          environment:
+            VAULT_ADDR: http://localhost:8200
           changed_when: false
           register: vault_operator_unseal_1
 
@@ -150,8 +172,9 @@
         root_token: "{{ vault_operator_init.stdout|from_json|json_query('root_token') }}"
       block:
         - name: "Command vault secret enable"
-          ansible.builtin.command: "vault secrets enable -version=1 -tls-skip-verify kv"
+          ansible.builtin.command: "vault secrets enable -version=1 kv"
           environment:
+            VAULT_ADDR: http://localhost:8200
             VAULT_TOKEN: "{{ root_token }}"
           changed_when: false
           register: vault_secret_enable

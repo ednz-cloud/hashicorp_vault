@@ -28,6 +28,22 @@
               - "'/bin/false' in vault_user.ansible_facts.getent_passwd['vault']"
               - "'vault' in vault_group.ansible_facts.getent_group.keys()"
 
+    - name: "Test: binary /usr/local/bin/vault"
+      block:
+        - name: "Stat binary /usr/local/bin/vault"
+          ansible.builtin.stat:
+            path: "/usr/local/bin/vault"
+          register: stat_usr_local_bin_vault
+
+        - name: "Verify binary /usr/local/bin/vault"
+          ansible.builtin.assert:
+            that:
+              - stat_usr_local_bin_vault.stat.exists
+              - stat_usr_local_bin_vault.stat.isreg
+              - stat_usr_local_bin_vault.stat.pw_name == 'root'
+              - stat_usr_local_bin_vault.stat.gr_name == 'root'
+              - stat_usr_local_bin_vault.stat.mode == '0755'
+
     - name: "Test: directory /etc/vault.d"
       block:
         - name: "Stat directory /etc/vault.d"
