@@ -1,5 +1,9 @@
 hashicorp_vault
 =========
+![Ansible Badge](https://img.shields.io/badge/Ansible-E00?logo=ansible&logoColor=fff&style=for-the-badge)
+![HashiCorp Badge](https://img.shields.io/badge/HashiCorp-000?logo=hashicorp&logoColor=fff&style=for-the-badge)
+![Vault Badge](https://img.shields.io/badge/Vault-FFEC6E?logo=vault&logoColor=000&style=for-the-badge)
+
 > This repository is only a mirror. Development and testing is done on a private gitea server.
 
 This role install and configure vault on **debian-based** distributions.
