@@ -1,13 +1,13 @@
 ---
 # defaults file for hashicorp_vault
-hashi_vault_start_service: true
-hashi_vault_version: latest
-hashi_vault_env_variables: {}
-hashi_vault_data_dir: "/opt/vault"
-hashi_vault_extra_files: false
-hashi_vault_extra_files_list: []
+hashicorp_vault_start_service: true
+hashicorp_vault_version: latest
+hashicorp_vault_env_variables: {}
+hashicorp_vault_data_dir: "/opt/vault"
+hashicorp_vault_extra_files: false
+hashicorp_vault_extra_files_list: []
 #! vault configuration
-hashi_vault_configuration:
+hashicorp_vault_configuration:
   cluster_name: vault
   cluster_addr: "http://127.0.0.1:8201"
   api_addr: "http://127.0.0.1:8200"
@@ -20,11 +20,11 @@ hashi_vault_configuration:
       cluster_address: "127.0.0.1:8201"
       tls_disable: true
       # tls_disable_client_certs: false
-      # tls_cert_file: "{{ hashi_vault_data_dir }}/tls/tls.crt"
-      # tls_key_file: "{{ hashi_vault_data_dir }}/tls/tls.key"
+      # tls_cert_file: "{{ hashicorp_vault_data_dir }}/tls/tls.crt"
+      # tls_key_file: "{{ hashicorp_vault_data_dir }}/tls/tls.key"
   storage:
     raft:
-      path: "{{ hashi_vault_data_dir }}"
+      path: "{{ hashicorp_vault_data_dir }}"
       node_id: "{{ ansible_hostname }}"
       retry_join:
         - leader_api_addr: "http://127.0.0.1:8200"

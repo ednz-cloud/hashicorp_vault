@@ -3,19 +3,19 @@ Description="HashiCorp Vault - A tool for managing secrets"
 Documentation=https://www.vaultproject.io/docs/
 Requires=network-online.target
 After=network-online.target
-ConditionFileNotEmpty={{ hashi_vault_config_dir }}/vault.json
+ConditionFileNotEmpty={{ hashicorp_vault_config_dir }}/vault.json
 StartLimitIntervalSec=60
 StartLimitBurst=3
-{% if hashi_vault_configuration.storage.consul is defined or hashi_vault_configuration.service_registration.consul is defined %}
+{% if hashicorp_vault_configuration.storage.consul is defined or hashicorp_vault_configuration.service_registration.consul is defined %}
 Wants=consul.service
 After=consul.service
 {% endif %}
 
 [Service]
 Type=notify
-EnvironmentFile=-{{ hashi_vault_config_dir }}/vault.env
-User={{ hashi_vault_user }}
-Group={{ hashi_vault_group }}
+EnvironmentFile=-{{ hashicorp_vault_config_dir }}/vault.env
+User={{ hashicorp_vault_user }}
+Group={{ hashicorp_vault_group }}
 ProtectSystem=full
 ProtectHome=read-only
 PrivateTmp=yes
@@ -24,7 +24,7 @@ SecureBits=keep-caps
 AmbientCapabilities=CAP_IPC_LOCK
 CapabilityBoundingSet=CAP_SYSLOG CAP_IPC_LOCK
 NoNewPrivileges=yes
-ExecStart={{ hashi_vault_binary_path }} server -config={{ hashi_vault_config_dir }}
+ExecStart={{ hashicorp_vault_binary_path }} server -config={{ hashicorp_vault_config_dir }}
 ExecReload=/bin/kill --signal HUP $MAINPID
 KillMode=process
 KillSignal=SIGINT

@@ -18,33 +18,33 @@ Role Variables
 Available variables are listed below, along with default values.
 
 ```yaml
-hashi_vault_start_service: true
+hashicorp_vault_start_service: true
 ```
 This variable defines if the vault service should be started once it has been configured. This is usefull in case you're using this role to build golden images, in which case you might want to only enable the service, to have it start on the next boot (when the image is launched)
 
 ```yaml
-hashi_vault_version: latest # by default, set to latest
+hashicorp_vault_version: latest # by default, set to latest
 ```
 This variable specifies the version of vault to install. The version to specify is either `latest` (NOT RECOMMENDED), or any tag present on the [GitHub Repository](https://github.com/hashicorp/vault/releases) (without the leading `v`). Loose tags are **not supported** (1.7, 1, etc..).
 
 ```yaml
-hashi_vault_env_variables: # by default, set to {}
+hashicorp_vault_env_variables: # by default, set to {}
   ENV_VAR: value
 ```
 This value is a list of key/value that will populate the `vault.env` file.
 
 ```yaml
-hashi_vault_data_dir: "/opt/vault" # by default, set to /opt/vault
+hashicorp_vault_data_dir: "/opt/vault" # by default, set to /opt/vault
 ```
 This value defines the path where vault data will be stored on the node. Defaults to `/opt/vault`.
 
 ```yaml
-hashi_vault_extra_files: false # by default, set to false
+hashicorp_vault_extra_files: false # by default, set to false
 ```
 This variable defines whether or not there is extra configuration files to copy to the target.
 
 ```yaml
-hashi_vault_extra_files_list: [] # by default, set to []
+hashicorp_vault_extra_files_list: [] # by default, set to []
   # - src: /tmp/directory
   #   dest: /etc/vault.d/directory
   # - src: /tmp/file.conf
@@ -68,7 +68,7 @@ For example, if you have the following source files to copy:
 You can set:
 
 ```yaml
-hashi_vault_extra_files_list: [] # by default, set to []
+hashicorp_vault_extra_files_list: [] # by default, set to []
   - src: /tmp/directory
     dest: /etc/vault.d/directory
   - src: /tmp/file
@@ -79,7 +79,7 @@ hashi_vault_extra_files_list: [] # by default, set to []
 all the files shown above will be copied over, and the directory structure inside `directory` will be preserved.
 
 ```yaml
-hashi_vault_configuration: {} # by default, set to a simple configuration
+hashicorp_vault_configuration: {} # by default, set to a simple configuration
 ```
 This variable sets all of the configuration parameters for vault. For more information on all of them, please check the [documentation](https://developer.hashicorp.com/vault/docs/configuration). This variable is parsed and converted to json format to create the config file, so each key and value should be set according to the documentation. This method of passing configuration allows for compatibility with every configuration parameters that vault has to offer. The defaults are simply here to deploy a simple, single-node vault server without much configuration, and should NOT be used in production. You will want to edit this to deploy production-ready clusters.
 

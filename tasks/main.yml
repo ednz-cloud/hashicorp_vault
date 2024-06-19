@@ -2,8 +2,8 @@
 # task/main file for hashicorp_vault
 - name: "Set reload-check & restart-check variable"
   ansible.builtin.set_fact:
-    _hashi_vault_service_need_reload: false
-    _hashi_vault_service_need_restart: false
+    _hashicorp_vault_service_need_reload: false
+    _hashicorp_vault_service_need_restart: false
 
 - name: "Import prerequisites.yml"
   ansible.builtin.include_tasks: prerequisites.yml
@@ -14,19 +14,19 @@
 - name: "Import configure.yml"
   ansible.builtin.include_tasks: configure.yml
 
-- name: "Enable service: {{ hashi_vault_service_name }}"
+- name: "Enable service: {{ hashicorp_vault_service_name }}"
   ansible.builtin.service:
-    name: "{{ hashi_vault_service_name }}"
+    name: "{{ hashicorp_vault_service_name }}"
     enabled: true
 
 - name: "Reload systemd daemon"
   ansible.builtin.systemd:
     daemon_reload: true
-  when: _hashi_vault_service_need_reload
+  when: _hashicorp_vault_service_need_reload
 
-- name: "Start service: {{ hashi_vault_service_name }}"
+- name: "Start service: {{ hashicorp_vault_service_name }}"
   ansible.builtin.service:
-    name: "{{ hashi_vault_service_name }}"
+    name: "{{ hashicorp_vault_service_name }}"
     state: restarted
   throttle: 1
-  when: _hashi_vault_service_need_restart
+  when: _hashicorp_vault_service_need_restart
