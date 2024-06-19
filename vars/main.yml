@@ -1,22 +1,22 @@
 ---
 # vars file for hashicorp_vault
-hashi_vault_user: "vault"
-hashi_vault_group: "vault"
+hashicorp_vault_user: "vault"
+hashicorp_vault_group: "vault"
 
-hashi_vault_config_dir: "/etc/vault.d"
-hashi_vault_binary_path: /usr/local/bin/vault
+hashicorp_vault_config_dir: "/etc/vault.d"
+hashicorp_vault_binary_path: /usr/local/bin/vault
 
-hashi_vault_deb_architecture_map:
+hashicorp_vault_deb_architecture_map:
   x86_64: "amd64"
   aarch64: "arm64"
   armv7l: "arm"
   armv6l: "arm"
 
-hashi_vault_architecture: "{{ hashi_vault_deb_architecture_map[ansible_architecture] | default(ansible_architecture) }}"
+hashicorp_vault_architecture: "{{ hashicorp_vault_deb_architecture_map[ansible_architecture] | default(ansible_architecture) }}"
 
-hashi_vault_service_name: "vault"
+hashicorp_vault_service_name: "vault"
 
-hashi_vault_github_api: https://api.github.com/repos
-hashi_vault_github_project: hashicorp/vault
-hashi_vault_github_url: https://github.com
-hashi_vault_repository_url: https://releases.hashicorp.com/vault
+hashicorp_vault_github_api: https://api.github.com/repos
+hashicorp_vault_github_project: hashicorp/vault
+hashicorp_vault_github_url: https://github.com
+hashicorp_vault_repository_url: https://releases.hashicorp.com/vault

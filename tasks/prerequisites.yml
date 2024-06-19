@@ -1,29 +1,29 @@
 ---
 # task/prerequisites file for hashicorp_vault
-- name: "Create group {{ hashi_vault_group }}"
+- name: "Create group {{ hashicorp_vault_group }}"
   ansible.builtin.group:
-    name: "{{ hashi_vault_group }}"
+    name: "{{ hashicorp_vault_group }}"
     state: present
 
-- name: "Create user {{ hashi_vault_user }}"
+- name: "Create user {{ hashicorp_vault_user }}"
   ansible.builtin.user:
-    name: "{{ hashi_vault_user }}"
-    group: "{{ hashi_vault_group }}"
+    name: "{{ hashicorp_vault_user }}"
+    group: "{{ hashicorp_vault_group }}"
     shell: /bin/false
     state: present
 
-- name: "Create directory {{ hashi_vault_config_dir }}"
+- name: "Create directory {{ hashicorp_vault_config_dir }}"
   ansible.builtin.file:
-    path: "{{ hashi_vault_config_dir }}"
+    path: "{{ hashicorp_vault_config_dir }}"
     state: directory
-    owner: "{{ hashi_vault_user }}"
-    group: "{{ hashi_vault_group }}"
+    owner: "{{ hashicorp_vault_user }}"
+    group: "{{ hashicorp_vault_group }}"
     mode: "0755"
 
-- name: "Create directory {{ hashi_vault_data_dir}}"
+- name: "Create directory {{ hashicorp_vault_data_dir}}"
   ansible.builtin.file:
-    path: "{{ hashi_vault_data_dir }}"
+    path: "{{ hashicorp_vault_data_dir }}"
     state: directory
-    owner: "{{ hashi_vault_user }}"
-    group: "{{ hashi_vault_group }}"
+    owner: "{{ hashicorp_vault_user }}"
+    group: "{{ hashicorp_vault_group }}"
     mode: "0755"
