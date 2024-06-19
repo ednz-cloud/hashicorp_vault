@@ -1,3 +1,9 @@
+## v0.2.0 (2024-06-19)
+
+### Feat
+
+- change variables naming convention to conform to ansible-lint policy
+
 ## v0.1.0 (2024-06-19)
 
 ### Feat
