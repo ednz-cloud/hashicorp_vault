@@ -1,22 +1,22 @@
 ---
 # vars file for hashicorp_vault
-hashi_vault_user: "{{ '100' if hashi_vault_deploy_method == 'docker' else 'vault' }}"
-hashi_vault_group: "{{ '1000' if hashi_vault_deploy_method == 'docker' else 'vault' }}"
+hashi_vault_user: "vault"
+hashi_vault_group: "vault"
+
 hashi_vault_config_dir: "/etc/vault.d"
-hashi_vault_service_name: "vault{{ '_container' if hashi_vault_deploy_method == 'docker' }}"
-hashi_vault_docker_image: hashicorp/vault
-hashi_vault_container_volume_map:
-  - "{{ hashi_vault_config_dir }}:{{ hashi_vault_config_dir }}"
-  - "{{ hashi_vault_data_dir }}:{{ hashi_vault_configuration.storage.file.path | default(hashi_vault_configuration.storage.raft.path | default('/vault/file')) }}"
-hashi_vault_repository:
-  - name: hashicorp
-    uri: "https://apt.releases.hashicorp.com"
-    comments: "hashicorp repository"
-    types:
-      - deb
-    suites:
-      - "{{ ansible_distribution_release }}"
-    components:
-      - main
-    options:
-      Signed-By: "https://apt.releases.hashicorp.com/gpg"
+hashi_vault_binary_path: /usr/local/bin/vault
+
+hashi_vault_deb_architecture_map:
+  x86_64: "amd64"
+  aarch64: "arm64"
+  armv7l: "arm"
+  armv6l: "arm"
+
+hashi_vault_architecture: "{{ hashi_vault_deb_architecture_map[ansible_architecture] | default(ansible_architecture) }}"
+
+hashi_vault_service_name: "vault"
+
+hashi_vault_github_api: https://api.github.com/repos
+hashi_vault_github_project: hashicorp/vault
+hashi_vault_github_url: https://github.com
+hashi_vault_repository_url: https://releases.hashicorp.com/vault

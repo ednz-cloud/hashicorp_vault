@@ -1,5 +1,9 @@
 hashicorp_vault
 =========
+![Ansible Badge](https://img.shields.io/badge/Ansible-E00?logo=ansible&logoColor=fff&style=for-the-badge)
+![HashiCorp Badge](https://img.shields.io/badge/HashiCorp-000?logo=hashicorp&logoColor=fff&style=for-the-badge)
+![Vault Badge](https://img.shields.io/badge/Vault-FFEC6E?logo=vault&logoColor=000&style=for-the-badge)
+
 > This repository is only a mirror. Development and testing is done on a private gitea server.
 
 This role install and configure vault on **debian-based** distributions.
@@ -7,7 +11,7 @@ This role install and configure vault on **debian-based** distributions.
 Requirements
 ------------
 
-None.
+The `unzip` package needs to be installed on the target host(s) to be able to decompress the consul release bundle.
 
 Role Variables
 --------------
@@ -21,21 +25,13 @@ This variable defines if the vault service should be started once it has been co
 ```yaml
 hashi_vault_version: latest # by default, set to latest
 ```
-This variable specifies the version of vault to install when `hashi_vault_install` is set to `true`. The version to specify is the version of the package on the hashicorp repository (`1.10.1-1` for example). This can be found by running `apt-cache madison vault` on a machine with the repository installed.
-
-If the version is set to `latest`, the role will update the package/docker image on every run if a newer version is available. This will cause a restart cycle of your node/cluster, to update every node to the latest version. Updating vault is usually pretty safe if done on a regular basis (given that you need a way to unseal the nodes upon restart), but for better control over the upgrade process, please set the variable to a static release version.
-
-```yaml
-hashi_vault_deploy_method: host # by default, set to host
-```
-This variable defines the method of deployment of vault. The `host` method installs the binary directly on the host, and runs vault as a systemd service. The `docker` method install vault as a docker container.
-> Currently, only the `host` method is available, the `docker` method will be added later.
+This variable specifies the version of vault to install. The version to specify is either `latest` (NOT RECOMMENDED), or any tag present on the [GitHub Repository](https://github.com/hashicorp/vault/releases) (without the leading `v`). Loose tags are **not supported** (1.7, 1, etc..).
 
 ```yaml
 hashi_vault_env_variables: # by default, set to {}
   ENV_VAR: value
 ```
-This value is a list of key/value that will populate the `vault.env`(for host deployment method) or `/etc/default/vault`(for docker deploy method) file.
+This value is a list of key/value that will populate the `vault.env` file.
 
 ```yaml
 hashi_vault_data_dir: "/opt/vault" # by default, set to /opt/vault
@@ -45,7 +41,7 @@ This value defines the path where vault data will be stored on the node. Default
 ```yaml
 hashi_vault_extra_files: false # by default, set to false
 ```
-This variable defines whether or not there is extra configuration files to copy to the target. If true, these files can be anything static (no jinja2 templates).
+This variable defines whether or not there is extra configuration files to copy to the target.
 
 ```yaml
 hashi_vault_extra_files_list: [] # by default, set to []
@@ -82,15 +78,6 @@ hashi_vault_extra_files_list: [] # by default, set to []
 ```
 all the files shown above will be copied over, and the directory structure inside `directory` will be preserved.
 
-> **Note**
-> In case you're using the `docker` deployment method, every destination path will be added automatically to the `hashi_vault_extra_container_volumes` variable, so you don't need to set them manually.
-
-
-```yaml
-hashi_vault_extra_container_volumes: [] # by default, set to []
-```
-This variable lets you defines more volumes to mount inside the container when using the `docker` deployment method. This is a list of string in the form: `"/path/on/host:/path/on/container"`. These volumes will not be created/checked before being mounted, so they need to exist prior to running this role.
-
 ```yaml
 hashi_vault_configuration: {} # by default, set to a simple configuration
 ```
@@ -99,8 +86,7 @@ This variable sets all of the configuration parameters for vault. For more infor
 Dependencies
 ------------
 
-`ednz_cloud.manage_repositories` to configure the hashicorp apt repository.
-`ednz_cloud.docker_systemd_service` if installing vault in a container.
+None.
 
 Example Playbook
 ----------------
