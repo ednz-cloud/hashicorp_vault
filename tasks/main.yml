@@ -1,38 +1,41 @@
 ---
 # task/main file for hashicorp_vault
-- name: "Set reload-check & restart-check variable"
+- name: "Vault | Set reload-check & restart-check variable"
   ansible.builtin.set_fact:
     _hashicorp_vault_service_need_reload: false
     _hashicorp_vault_service_need_restart: false
 
-- name: "Import prerequisites.yml"
+- name: "Vault | Import merge_variables.yml"
+  ansible.builtin.include_tasks: merge_variables.yml
+
+- name: "Vault | Import prerequisites.yml"
   ansible.builtin.include_tasks: prerequisites.yml
 
-- name: "Import install.yml"
+- name: "Vault | Import install.yml"
   ansible.builtin.include_tasks: "install.yml"
 
-- name: "Import configure.yml"
+- name: "Vault | Import configure.yml"
   ansible.builtin.include_tasks: configure.yml
 
-- name: "Populate service facts"
+- name: "Vault | Populate service facts"
   ansible.builtin.service_facts:
 
-- name: "Set restart-check variable"
+- name: "Vault | Set restart-check variable"
   ansible.builtin.set_fact:
     _hashicorp_vault_service_need_restart: true
   when: ansible_facts.services[hashicorp_vault_service_name~'.service'].state != 'running'
 
-- name: "Enable service: {{ hashicorp_vault_service_name }}"
+- name: "Vault | Enable service: {{ hashicorp_vault_service_name }}"
   ansible.builtin.service:
     name: "{{ hashicorp_vault_service_name }}"
     enabled: true
 
-- name: "Reload systemd daemon"
+- name: "Vault | Reload systemd daemon"
   ansible.builtin.systemd:
     daemon_reload: true
   when: _hashicorp_vault_service_need_reload
 
-- name: "Start service: {{ hashicorp_vault_service_name }}"
+- name: "Vault | Start service: {{ hashicorp_vault_service_name }}"
   ansible.builtin.service:
     name: "{{ hashicorp_vault_service_name }}"
     state: restarted

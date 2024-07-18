@@ -1,38 +1,85 @@
 ---
 # defaults file for hashicorp_vault
-hashicorp_vault_start_service: true
 hashicorp_vault_version: latest
-hashicorp_vault_env_variables: {}
+hashicorp_vault_start_service: true
+hashicorp_vault_config_dir: "/etc/vault.d"
 hashicorp_vault_data_dir: "/opt/vault"
+hashicorp_vault_certs_dir: "{{ hashicorp_vault_config_dir }}/tls"
+hashicorp_vault_logs_dir: "/var/log/vault"
+
 hashicorp_vault_extra_files: false
 hashicorp_vault_extra_files_list: []
-#! vault configuration
-hashicorp_vault_configuration:
-  cluster_name: vault
-  cluster_addr: "http://127.0.0.1:8201"
-  api_addr: "http://127.0.0.1:8200"
-  ui: true
-  disable_mlock: false
-  disable_cache: false
-  listener:
-    tcp:
-      address: "127.0.0.1:8200"
-      cluster_address: "127.0.0.1:8201"
-      tls_disable: true
-      # tls_disable_client_certs: false
-      # tls_cert_file: "{{ hashicorp_vault_data_dir }}/tls/tls.crt"
-      # tls_key_file: "{{ hashicorp_vault_data_dir }}/tls/tls.key"
-  storage:
-    file:
-      path: "{{ hashicorp_vault_data_dir }}"
-  telemetry:
-    usage_gauge_period: 10m
-    maximum_gauge_cardinality: 500
-    disable_hostname: false
-    enable_hostname_label: false
-    lease_metrics_epsilon: 1h
-    num_lease_metrics_buckets: 168
-    add_lease_metrics_namespace_labels: false
-    filter_default: true
-    prefix_filter: []
-    prometheus_retention_time: 24h
+
+hashicorp_vault_env_variables: {}
+
+#######################
+# extra configuration #
+#######################
+
+# You should prioritize adding configuration
+# to the configuration entries below, this
+# option should be used to add pieces of configuration not
+# available through standard variables.
+
+hashicorp_vault_extra_configuration: {}
+
+###########
+# general #
+###########
+
+hashicorp_vault_cluster_name: vault
+hashicorp_vault_bind_addr: "0.0.0.0"
+hashicorp_vault_cluster_addr: "{{ ansible_default_ipv4.address }}"
+hashicorp_vault_enable_ui: true
+hashicorp_vault_disable_mlock: false
+hashicorp_vault_disable_cache: false
+
+#########################
+# storage configuration #
+#########################
+
+hashicorp_vault_storage_configuration:
+  file:
+    path: "{{ hashicorp_vault_data_dir }}"
+
+##########################
+# listener configuration #
+##########################
+
+hashicorp_vault_enable_tls: false
+hashicorp_vault_listener_configuration:
+  tcp:
+    address: "{{ hashicorp_vault_cluster_addr }}:8200"
+    tls_disable: true
+
+hashicorp_vault_tls_listener_configuration:
+  tcp:
+    tls_disable: false
+    tls_cert_file: "{{ hashicorp_vault_certs_dir }}/cert.pem"
+    tls_key_file: "{{ hashicorp_vault_certs_dir }}/key.pem"
+    tls_disable_client_certs: true
+
+hashicorp_vault_certificates_extra_files_dir:
+  []
+  # - src: ""
+  #   dest: "{{ hashicorp_vault_certs_dir }}"
+
+hashicorp_vault_extra_listener_configuration: {}
+
+########################
+# service registration #
+########################
+
+hashicorp_vault_enable_service_registration: false
+hashicorp_vault_service_registration_configuration:
+  consul:
+    address: "127.0.0.1:8500"
+    scheme: "http"
+    token: ""
+
+#########################
+# plugins configuration #
+#########################
+
+hashicorp_vault_enable_plugins: false
+hashicorp_vault_plugins_directory: "{{ hashicorp_vault_config_dir }}/plugins"
