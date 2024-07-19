@@ -1,18 +1,18 @@
 ---
 # task/prerequisites file for hashicorp_vault
-- name: "Create group {{ hashicorp_vault_group }}"
+- name: "Vault | Create group {{ hashicorp_vault_group }}"
   ansible.builtin.group:
     name: "{{ hashicorp_vault_group }}"
     state: present
 
-- name: "Create user {{ hashicorp_vault_user }}"
+- name: "Vault | Create user {{ hashicorp_vault_user }}"
   ansible.builtin.user:
     name: "{{ hashicorp_vault_user }}"
     group: "{{ hashicorp_vault_group }}"
     shell: /bin/false
     state: present
 
-- name: "Create directory {{ hashicorp_vault_config_dir }}"
+- name: "Vault | Create directory {{ hashicorp_vault_config_dir }}"
   ansible.builtin.file:
     path: "{{ hashicorp_vault_config_dir }}"
     state: directory
@@ -20,10 +20,27 @@
     group: "{{ hashicorp_vault_group }}"
     mode: "0755"
 
-- name: "Create directory {{ hashicorp_vault_data_dir}}"
+- name: "Vault | Create directory {{ hashicorp_vault_data_dir}}"
   ansible.builtin.file:
     path: "{{ hashicorp_vault_data_dir }}"
     state: directory
     owner: "{{ hashicorp_vault_user }}"
     group: "{{ hashicorp_vault_group }}"
     mode: "0755"
+
+- name: "Vault | Create directory {{ hashicorp_vault_certs_dir }}"
+  ansible.builtin.file:
+    path: "{{ hashicorp_vault_certs_dir }}"
+    state: directory
+    owner: "{{ hashicorp_vault_user }}"
+    group: "{{ hashicorp_vault_group }}"
+    mode: "0755"
+
+- name: "Vault | Create directory {{ hashicorp_vault_logs_dir }}"
+  ansible.builtin.file:
+    path: "{{ hashicorp_vault_logs_dir }}"
+    state: directory
+    owner: "{{ hashicorp_vault_user }}"
+    group: "{{ hashicorp_vault_group }}"
+    mode: "0755"
+  when: hashicorp_vault_enable_log_to_file

@@ -2,21 +2,25 @@
 # vars file for hashicorp_vault
 hashicorp_vault_user: "vault"
 hashicorp_vault_group: "vault"
-
-hashicorp_vault_config_dir: "/etc/vault.d"
 hashicorp_vault_binary_path: /usr/local/bin/vault
-
 hashicorp_vault_deb_architecture_map:
   x86_64: "amd64"
   aarch64: "arm64"
   armv7l: "arm"
   armv6l: "arm"
-
 hashicorp_vault_architecture: "{{ hashicorp_vault_deb_architecture_map[ansible_architecture] | default(ansible_architecture) }}"
-
 hashicorp_vault_service_name: "vault"
-
 hashicorp_vault_github_api: https://api.github.com/repos
 hashicorp_vault_github_project: hashicorp/vault
 hashicorp_vault_github_url: https://github.com
 hashicorp_vault_repository_url: https://releases.hashicorp.com/vault
+
+hashicorp_vault_configuration:
+  cluster_name: "{{ hashicorp_vault_cluster_name }}"
+  cluster_addr: "{{ 'https' if hashicorp_vault_enable_tls else 'http'}}://{{ hashicorp_vault_cluster_addr }}:8201"
+  api_addr: "{{ 'https' if hashicorp_vault_enable_tls else 'http'}}://{{ hashicorp_vault_cluster_addr }}:8200"
+  ui: "{{ hashicorp_vault_enable_ui }}"
+  disable_mlock: "{{ hashicorp_vault_disable_mlock }}"
+  disable_cache: "{{ hashicorp_vault_disable_cache }}"
+  listener: "{{ hashicorp_vault_listener_configuration }}"
+  storage: "{{ hashicorp_vault_storage_configuration }}"

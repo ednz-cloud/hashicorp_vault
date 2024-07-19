@@ -1,33 +1,33 @@
 ---
 # task/install file for hashicorp_vault
-- name: "Get latest release of vault"
+- name: "Vault | Get latest release of vault"
   when: hashicorp_vault_version == 'latest'
   block:
-    - name: "Get latest vault release from github api"
+    - name: "Vault | Get latest vault release from github api"
       ansible.builtin.uri:
         url: "{{ hashicorp_vault_github_api }}/hashicorp/vault/releases/latest"
         return_content: true
       register: _hashicorp_vault_latest_release
 
-    - name: "Set wanted vault version to latest tag"
+    - name: "Vault | Set wanted vault version to latest tag"
       ansible.builtin.set_fact:
         _hashicorp_vault_wanted_version: "{{ _hashicorp_vault_latest_release.json['tag_name']|regex_replace('v', '') }}"
 
-- name: "Set wanted vault version to {{ hashicorp_vault_version }}"
+- name: "Vault | Set wanted vault version to {{ hashicorp_vault_version }}"
   ansible.builtin.set_fact:
     _hashicorp_vault_wanted_version: "{{ hashicorp_vault_version|regex_replace('v', '') }}"
   when: hashicorp_vault_version != 'latest'
 
-- name: "Get current vault version"
+- name: "Vault | Get current vault version"
   block:
-    - name: "Stat vault version file"
+    - name: "Vault | Stat vault version file"
       ansible.builtin.stat:
         path: "{{ hashicorp_vault_config_dir }}/.version"
       changed_when: false
       check_mode: false
       register: _hashicorp_vault_version_file
 
-    - name: "Get current vault version"
+    - name: "Vault | Get current vault version"
       ansible.builtin.slurp:
         src: "{{ _hashicorp_vault_version_file.stat.path }}"
       when:
@@ -35,18 +35,18 @@
         - _hashicorp_vault_version_file.stat.isreg
       register: _hashicorp_vault_current_version
 
-- name: "Download and install vault binary"
+- name: "Vault | Download and install vault binary"
   when: _hashicorp_vault_current_version is not defined
     or _hashicorp_vault_wanted_version != (_hashicorp_vault_current_version.content|default('')|b64decode)
   block:
-    - name: "Set vault package name to download"
+    - name: "Vault | Set vault package name to download"
       ansible.builtin.set_fact:
         _hashicorp_vault_package_name: >-
           vault_{{ _hashicorp_vault_wanted_version }}_linux_{{ hashicorp_vault_deb_architecture_map[ansible_architecture] }}.zip
         _hashicorp_vault_shasum_file_name: >-
           vault_{{ _hashicorp_vault_wanted_version }}_SHA256SUMS
 
-    - name: "Download checksum file for vault archive"
+    - name: "Vault | Download checksum file for vault archive"
       ansible.builtin.get_url:
         url: "{{ hashicorp_vault_repository_url }}/{{ _hashicorp_vault_wanted_version }}/{{ _hashicorp_vault_shasum_file_name }}"
         dest: "/tmp/{{ _hashicorp_vault_shasum_file_name }}"
@@ -57,17 +57,17 @@
       delay: 2
       check_mode: false
 
-    - name: "Extract correct checksum from checksum file"
+    - name: "Vault | Extract correct checksum from checksum file"
       ansible.builtin.command:
         cmd: 'grep "{{ _hashicorp_vault_package_name }}" /tmp/{{ _hashicorp_vault_shasum_file_name }}'
       changed_when: false
       register: _hashicorp_vault_expected_checksum_line
 
-    - name: "Parse the expected checksum"
+    - name: "Vault | Parse the expected checksum"
       ansible.builtin.set_fact:
         _hashicorp_vault_expected_checksum: "{{ _hashicorp_vault_expected_checksum_line.stdout.split()[0] }}"
 
-    - name: "Download vault binary archive"
+    - name: "Vault | Download vault binary archive"
       ansible.builtin.get_url:
         url: "{{ hashicorp_vault_repository_url }}/{{ _hashicorp_vault_wanted_version }}/{{ _hashicorp_vault_package_name }}"
         dest: "/tmp/{{ _hashicorp_vault_package_name }}"
@@ -79,13 +79,13 @@
       delay: 2
       check_mode: false
 
-    - name: "Create temporary directory for archive decompression"
+    - name: "Vault | Create temporary directory for archive decompression"
       ansible.builtin.file:
         path: /tmp/vault
         state: directory
         mode: "0755"
 
-    - name: "Unpack vault archive"
+    - name: "Vault | Unpack vault archive"
       ansible.builtin.unarchive:
         src: "/tmp/{{ _hashicorp_vault_package_name }}"
         dest: "/tmp/vault"
@@ -94,7 +94,7 @@
         mode: "0755"
         remote_src: true
 
-    - name: "Copy vault binary to {{ hashicorp_vault_binary_path }}"
+    - name: "Vault | Copy vault binary to {{ hashicorp_vault_binary_path }}"
       ansible.builtin.copy:
         src: /tmp/vault/vault
         dest: "{{ hashicorp_vault_binary_path }}"
@@ -104,7 +104,7 @@
         remote_src: true
         force: true
 
-    - name: "Update vault version file"
+    - name: "Vault | Update vault version file"
       ansible.builtin.copy:
         content: "{{ _hashicorp_vault_wanted_version }}"
         dest: "{{ hashicorp_vault_config_dir }}/.version"
@@ -112,11 +112,11 @@
         group: "{{ hashicorp_vault_group }}"
         mode: "0600"
 
-    - name: "Set restart-check variable"
+    - name: "Vault | Set restart-check variable"
       ansible.builtin.set_fact:
         _hashicorp_vault_service_need_restart: true
 
-    - name: "Cleanup temporary directory"
+    - name: "Vault | Cleanup temporary directory"
       ansible.builtin.file:
         path: "{{ item }}"
         state: absent
@@ -125,7 +125,7 @@
         - /tmp/{{ _hashicorp_vault_package_name }}
         - /tmp/{{ _hashicorp_vault_shasum_file_name }}
 
-- name: "Copy systemd service file for vault"
+- name: "Vault | Copy systemd service file for vault"
   ansible.builtin.template:
     src: "vault.service.j2"
     dest: "/etc/systemd/system/{{ hashicorp_vault_service_name }}.service"
@@ -134,13 +134,13 @@
     mode: "0644"
   register: _hashicorp_vault_unit_file
 
-- name: "Set reload-check & restart-check variable"
+- name: "Vault | Set reload-check & restart-check variable"
   ansible.builtin.set_fact:
     _hashicorp_vault_service_need_reload: true
     _hashicorp_vault_service_need_restart: true
   when: _hashicorp_vault_unit_file.changed # noqa: no-handler
 
-- name: "Copy systemd service file for vault"
+- name: "Vault | Copy systemd service file for vault"
   ansible.builtin.template:
     src: "vault.service.j2"
     dest: "/etc/systemd/system/vault.service"

@@ -1,43 +1,13 @@
 ---
 # defaults file for hashicorp_vault
-hashicorp_vault_start_service: true
-hashicorp_vault_version: latest
-hashicorp_vault_env_variables: {}
-hashicorp_vault_data_dir: "/opt/vault"
-hashicorp_vault_extra_files: false
-hashicorp_vault_extra_files_list: []
-#! vault configuration
-hashicorp_vault_configuration:
-  cluster_name: vault
-  cluster_addr: "http://127.0.0.1:8201"
-  api_addr: "http://127.0.0.1:8200"
-  ui: true
-  disable_mlock: false
-  disable_cache: false
-  listener:
-    tcp:
-      address: "127.0.0.1:8200"
-      cluster_address: "127.0.0.1:8201"
-      tls_disable: true
-      # tls_disable_client_certs: false
-      # tls_cert_file: "{{ hashicorp_vault_data_dir }}/tls/tls.crt"
-      # tls_key_file: "{{ hashicorp_vault_data_dir }}/tls/tls.key"
-  storage:
-    raft:
-      path: "{{ hashicorp_vault_data_dir }}"
-      node_id: "{{ ansible_hostname }}"
-      retry_join:
-        - leader_api_addr: "http://127.0.0.1:8200"
-        - leader_api_addr: "http://127.0.0.2:8200"
-        - leader_api_addr: "http://127.0.0.3:8200"
-  telemetry:
-    usage_gauge_period: 10m
-    maximum_gauge_cardinality: 500
-    disable_hostname: false
-    enable_hostname_label: false
-    lease_metrics_epsilon: 1h
-    num_lease_metrics_buckets: 168
-    add_lease_metrics_namespace_labels: false
-    filter_default: true
-    prefix_filter: []
-    prometheus_retention_time: 24h
+
+#########################
+# storage configuration #
+#########################
+
+hashicorp_vault_storage_configuration:
+  raft:
+    path: "{{ hashicorp_vault_data_dir }}"
+    node_id: "{{ ansible_hostname }}"
+    retry_join:
+      - leader_api_addr: "http://{{ hashicorp_vault_cluster_addr }}:8200"
