@@ -83,3 +83,14 @@ hashicorp_vault_service_registration_configuration:
 
 hashicorp_vault_enable_plugins: false
 hashicorp_vault_plugins_directory: "{{ hashicorp_vault_config_dir }}/plugins"
+
+#################
+# vault logging #
+#################
+
+hashicorp_vault_log_level: info
+hashicorp_vault_enable_log_to_file: false
+hashicorp_vault_log_to_file_configuration:
+  log_file: "{{ hashicorp_vault_logs_dir }}/vault.log"
+  log_rotate_duration: 24h
+  log_rotate_max_files: 30
