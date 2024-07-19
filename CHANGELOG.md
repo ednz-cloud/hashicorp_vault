@@ -1,3 +1,10 @@
+## v0.3.0 (2024-07-19)
+
+### Feat
+
+- change variables to ease integration in hashistack collection while remaining usable as a standalone role
+- replaces variables to better integrate with hashistack collection while remaining usable as a standalone role
+
 ## v0.2.1 (2024-07-12)
 
 ### Fix
